@@ -1,5 +1,13 @@
 # HopeRise Foundation
 
+## 🌐 Live Demo
+
+The HopeRise Foundation website is deployed and available online:
+
+**Live Website:** https://hope-rise-foundation-m3jx.vercel.app/
+
+The application can be accessed at any time for project evaluation and demonstration.
+
 A React-based NGO Content Management System website developed for the HopeRise Foundation as part of an internship project.
 
 ## 📌 Project Overview
