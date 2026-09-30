@@ -1,0 +1,692 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}
+Volunteers | HopeRise Foundation
+{% endblock %}
+
+{% block page_title %}
+Volunteers
+{% endblock %}
+
+{% block page_subtitle %}
+Manage and monitor HopeRise Foundation volunteers.
+{% endblock %}
+
+{% block content %}
+
+<!-- =========================
+     STAT CARDS
+========================= -->
+
+<section class="stats">
+
+    <div class="stat-card" style="--card-color:#6541e8;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-number">
+            {{ total_volunteers }}
+        </div>
+
+        <div class="stat-label">
+            Total Volunteers
+        </div>
+
+    </div>
+
+
+    <div class="stat-card" style="--card-color:#18b981;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-person-check-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-number">
+            {{ active_volunteers }}
+        </div>
+
+        <div class="stat-label">
+            Active Volunteers
+        </div>
+
+    </div>
+
+
+    <div class="stat-card" style="--card-color:#f59e0b;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-person-plus-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-number">
+            {{ pending_volunteers }}
+        </div>
+
+        <div class="stat-label">
+            Pending Applications
+        </div>
+
+    </div>
+
+
+    <div class="stat-card" style="--card-color:#ef476f;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-person-x-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-number">
+            {{ inactive_volunteers }}
+        </div>
+
+        <div class="stat-label">
+            Inactive Volunteers
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     VOLUNTEER MANAGEMENT
+========================= -->
+
+<section class="content-card">
+
+    <div class="content-header">
+
+        <div>
+
+            <h3>Volunteer Management</h3>
+
+            <p>
+                View, search and manage registered volunteers.
+            </p>
+
+        </div>
+
+        <button
+            class="add-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#addVolunteerModal"
+        >
+            <i class="bi bi-plus-lg"></i>
+            Add Volunteer
+        </button>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <div class="search-box">
+
+            <i class="bi bi-search"></i>
+
+            <input
+                type="text"
+                id="volunteerSearch"
+                placeholder="Search volunteer name, email or role..."
+            >
+
+        </div>
+
+        <select
+            class="filter-select"
+            id="statusFilter"
+        >
+
+            <option value="all">
+                All Status
+            </option>
+
+            <option value="active">
+                Active
+            </option>
+
+            <option value="pending">
+                Pending
+            </option>
+
+            <option value="inactive">
+                Inactive
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="table-wrapper">
+
+        <table class="volunteer-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Volunteer</th>
+                    <th>Email</th>
+                    <th>Area</th>
+                    <th>Joined</th>
+                    <th>Status</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="volunteerTable">
+
+                {% for volunteer in volunteers %}
+
+                <tr data-status="{{ volunteer.status }}">
+
+                    <td>
+
+                        <div style="display:flex;align-items:center;gap:11px;">
+
+                            <div
+                                style="
+                                    width:38px;
+                                    height:38px;
+                                    border-radius:50%;
+                                    display:grid;
+                                    place-items:center;
+                                    color:white;
+                                    font-weight:bold;
+                                    font-size:12px;
+                                    background:linear-gradient(135deg,#4175df,#7958d8);
+                                    flex-shrink:0;
+                                "
+                            >
+                                {{ volunteer.name|slice:":2"|upper }}
+                            </div>
+
+                            <div>
+
+                                <strong style="display:block;font-size:11px;">
+                                    {{ volunteer.name }}
+                                </strong>
+
+                                <span style="color:var(--muted);font-size:9px;">
+                                    Volunteer #{{ volunteer.id }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        {{ volunteer.email }}
+                    </td>
+
+                    <td>
+                        {{ volunteer.area }}
+                    </td>
+
+                    <td>
+                        {{ volunteer.joined_date|date:"d M Y" }}
+                    </td>
+
+                    <td>
+
+                        {% if volunteer.status == "active" %}
+
+                            <span class="status active">
+                                Active
+                            </span>
+
+                        {% elif volunteer.status == "pending" %}
+
+                            <span class="status pending">
+                                Pending
+                            </span>
+
+                        {% else %}
+
+                            <span class="status inactive">
+                                Inactive
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+<td>
+
+    <div style="display:flex; gap:5px;">
+
+        <!-- VIEW -->
+        <button
+            type="button"
+            class="action-btn"
+            onclick="viewVolunteer(
+                '{{ volunteer.name|escapejs }}',
+                '{{ volunteer.email|escapejs }}',
+                '{{ volunteer.area|escapejs }}',
+                '{{ volunteer.status|escapejs }}'
+            )"
+            title="View"
+        >
+            <i class="bi bi-eye-fill"></i>
+        </button>
+
+
+        <!-- EDIT -->
+        <a
+            href="{% url 'volunteer_edit' volunteer.id %}"
+            class="action-btn"
+            title="Edit"
+        >
+            <i class="bi bi-pencil-fill"></i>
+        </a>
+
+
+        <!-- DELETE -->
+        <button
+            type="button"
+            class="action-btn"
+            title="Delete"
+            onclick="deleteVolunteer(
+                {{ volunteer.id }},
+                '{{ volunteer.name|escapejs }}'
+            )"
+        >
+            <i class="bi bi-trash-fill"></i>
+        </button>
+
+    </div>
+
+</td>
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        style="text-align:center;padding:40px;"
+                    >
+
+                        <i
+                            class="bi bi-people"
+                            style="
+                                font-size:35px;
+                                display:block;
+                                margin-bottom:10px;
+                            "
+                        ></i>
+
+                        No volunteers found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ADD VOLUNTEER MODAL
+========================= -->
+
+<div
+    class="modal fade"
+    id="addVolunteerModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Add Volunteer
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form
+                    method="POST"
+                    id="volunteerForm"
+                >
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="volunteerName"
+                            name="name"
+                            placeholder="Enter volunteer name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="volunteerEmail"
+                            name="email"
+                            placeholder="Enter email address"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Area of Work
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="volunteerArea"
+                            name="area"
+                            required
+                        >
+
+                            <option value="">
+                                Select area
+                            </option>
+
+                            <option value="Education">
+                                Education
+                            </option>
+
+                            <option value="Healthcare">
+                                Healthcare
+                            </option>
+
+                            <option value="Community">
+                                Community
+                            </option>
+
+                            <option value="Women Support">
+                                Women Support
+                            </option>
+
+                            <option value="Child Welfare">
+                                Child Welfare
+                            </option>
+
+                            <option value="Fundraising">
+                                Fundraising
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="volunteerStatus"
+                            name="status"
+                        >
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="pending">
+                                Pending
+                            </option>
+
+                            <option value="inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="add-btn w-100"
+                    >
+                        Add Volunteer
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+    // =========================
+    // SEARCH + STATUS FILTER
+    // =========================
+
+    const volunteerSearch =
+        document.getElementById("volunteerSearch");
+
+    const statusFilter =
+        document.getElementById("statusFilter");
+
+    const volunteerRows =
+        document.querySelectorAll(
+            "#volunteerTable tr[data-status]"
+        );
+
+
+    function filterVolunteers() {
+
+        const searchText =
+            volunteerSearch.value.toLowerCase().trim();
+
+        const selectedStatus =
+            statusFilter.value.toLowerCase();
+
+        volunteerRows.forEach(function(row) {
+
+            const rowText =
+                row.innerText.toLowerCase();
+
+            const rowStatus =
+                row.getAttribute("data-status").toLowerCase();
+
+            const matchesSearch =
+                rowText.includes(searchText);
+
+            const matchesStatus =
+                selectedStatus === "all" ||
+                rowStatus === selectedStatus;
+
+            if (matchesSearch && matchesStatus) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+
+        });
+
+    }
+
+
+    if (volunteerSearch) {
+        volunteerSearch.addEventListener(
+            "input",
+            filterVolunteers
+        );
+    }
+
+
+    if (statusFilter) {
+        statusFilter.addEventListener(
+            "change",
+            filterVolunteers
+        );
+    }
+
+
+
+    // =========================
+    // VIEW VOLUNTEER
+    // =========================
+
+    function viewVolunteer(
+        name,
+        email,
+        area,
+        status
+    ) {
+
+        alert(
+            "Volunteer Profile\n\n" +
+            "Name: " + name +
+            "\nEmail: " + email +
+            "\nArea: " + area +
+            "\nStatus: " + status
+        );
+
+    }
+
+
+
+    // =========================
+    // DELETE VOLUNTEER
+    // =========================
+
+    function deleteVolunteer(id, name) {
+
+        const confirmDelete =
+            confirm(
+                "Are you sure you want to delete " +
+                name +
+                "?"
+            );
+
+        if (!confirmDelete) {
+            return;
+        }
+
+
+        const form =
+            document.createElement("form");
+
+        form.method = "POST";
+
+        form.action =
+            "{% url 'volunteer_delete' 0 %}"
+            .replace("0", id);
+
+
+        const csrfToken =
+            document.querySelector(
+                "[name=csrfmiddlewaretoken]"
+            );
+
+
+        if (!csrfToken) {
+
+            alert(
+                "Security token not found. Please refresh the page."
+            );
+
+            return;
+        }
+
+
+        const csrfInput =
+            document.createElement("input");
+
+        csrfInput.type = "hidden";
+
+        csrfInput.name =
+            "csrfmiddlewaretoken";
+
+        csrfInput.value =
+            csrfToken.value;
+
+
+        form.appendChild(csrfInput);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+    }
+
+</script>
+{% endblock %}

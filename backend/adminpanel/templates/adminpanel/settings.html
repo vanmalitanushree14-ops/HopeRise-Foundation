@@ -1,0 +1,689 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}Settings | HopeRise Foundation{% endblock %}
+
+{% block page_title %}Settings{% endblock %}
+
+{% block page_subtitle %}
+Manage your administrator account and system information
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .settings-card {
+        background: var(--card-bg, #ffffff);
+        border: 1px solid var(--border-color, #e5e7eb);
+        border-radius: 16px;
+        padding: 25px;
+        height: 100%;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .profile-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #6f42c1;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .profile-header h4 {
+        margin: 0 0 5px;
+        font-weight: 700;
+    }
+
+    .profile-header p {
+        margin: 0;
+        color: #6b7280;
+    }
+
+    .setting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border-color, #e5e7eb);
+    }
+
+    .setting-row:last-child {
+        border-bottom: none;
+    }
+
+    .setting-label {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .setting-value {
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: rgba(25, 135, 84, 0.12);
+        color: #198754;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .info-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        background: rgba(13, 110, 253, 0.10);
+        color: #0d6efd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .system-item {
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border-color, #e5e7eb);
+    }
+
+    .system-item:last-child {
+        border-bottom: none;
+    }
+
+    .system-item strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .system-item span {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .settings-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    .settings-actions button {
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-weight: 600;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 10px 12px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
+
+    @media (max-width: 576px) {
+
+        .setting-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .setting-value {
+            text-align: left;
+        }
+
+        .settings-actions {
+            flex-direction: column;
+        }
+
+        .settings-actions button {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<div class="row g-4">
+
+
+<!-- ADMIN PROFILE -->
+
+<div class="col-lg-7">
+
+    <div class="settings-card">
+
+        <div class="profile-header">
+
+            <div class="profile-avatar">
+                {{ user.full_name|first|upper }}
+            </div>
+
+            <div>
+
+                <h4>
+                    {{ user.full_name }}
+                </h4>
+
+                <p>
+                    HopeRise Foundation Administrator
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- FULL NAME -->
+
+        <div class="setting-row">
+
+            <div class="setting-label">
+                Full Name
+            </div>
+
+            <div class="setting-value">
+                {{ user.full_name }}
+            </div>
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div class="setting-row">
+
+            <div class="setting-label">
+                Email Address
+            </div>
+
+            <div class="setting-value">
+                {{ user.email }}
+            </div>
+
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="setting-row">
+
+            <div class="setting-label">
+                Role
+            </div>
+
+            <div class="setting-value">
+                {{ user.get_role_display }}
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="setting-row">
+
+            <div class="setting-label">
+                Account Status
+            </div>
+
+            <div class="setting-value">
+
+                {% if user.status == "active" %}
+
+                    <span class="status-badge">
+                        Active
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-secondary">
+                        Inactive
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- CREATED DATE -->
+
+        <div class="setting-row">
+
+            <div class="setting-label">
+                Account Created
+            </div>
+
+            <div class="setting-value">
+                {{ user.created_at|date:"d M Y" }}
+            </div>
+
+        </div>
+
+
+        <!-- ACTION BUTTONS -->
+
+        <div class="settings-actions">
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#editProfileModal"
+            >
+                <i class="bi bi-person-gear me-2"></i>
+                Edit Profile
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-outline-dark"
+                data-bs-toggle="modal"
+                data-bs-target="#changePasswordModal"
+            >
+                <i class="bi bi-key me-2"></i>
+                Change Password
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- SYSTEM INFORMATION -->
+
+<div class="col-lg-5">
+
+    <div class="settings-card">
+
+        <div class="info-icon">
+            <i class="bi bi-gear"></i>
+        </div>
+
+        <h4 class="fw-bold mb-3">
+            System Information
+        </h4>
+
+
+        <div class="system-item">
+
+            <strong>
+                Organization
+            </strong>
+
+            <span>
+                HopeRise Foundation
+            </span>
+
+        </div>
+
+
+        <div class="system-item">
+
+            <strong>
+                Admin Panel
+            </strong>
+
+            <span>
+                HopeRise Foundation Management System
+            </span>
+
+        </div>
+
+
+        <div class="system-item">
+
+            <strong>
+                Platform
+            </strong>
+
+            <span>
+                Django Administration System
+            </span>
+
+        </div>
+
+
+        <div class="system-item">
+
+            <strong>
+                Account Type
+            </strong>
+
+            <span>
+                Administrator
+            </span>
+
+        </div>
+
+
+        <div class="system-item">
+
+            <strong>
+                Authentication
+            </strong>
+
+            <span>
+                Email and Password
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+
+<!-- ========================= -->
+<!-- EDIT PROFILE MODAL -->
+<!-- ========================= -->
+
+<div
+    class="modal fade"
+    id="editProfileModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-person-gear me-2"></i>
+                    Edit Profile
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <form method="POST" action="{% url 'edit_profile' %}">
+
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    {% if profile_error %}
+
+                        <div class="alert alert-danger">
+                            {{ profile_error }}
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="full_name"
+                            class="form-control"
+                            value="{{ user.full_name }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ user.email }}"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <i class="bi bi-check-lg me-1"></i>
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================= -->
+<!-- CHANGE PASSWORD MODAL -->
+<!-- ========================= -->
+
+<div
+    class="modal fade"
+    id="changePasswordModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold">
+
+                    <i class="bi bi-key me-2"></i>
+
+                    Change Password
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <form method="POST" action="{% url 'change_password' %}">
+
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    {% if password_error %}
+
+                        <div class="alert alert-danger">
+                            {{ password_error }}
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Current Password
+                        </label>
+
+                        <input
+                            type="password"
+                            name="current_password"
+                            class="form-control"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            New Password
+                        </label>
+
+                        <input
+                            type="password"
+                            name="new_password"
+                            class="form-control"
+                            minlength="8"
+                            required
+                        >
+
+                        <small class="text-muted">
+                            Password must contain at least 8 characters.
+                        </small>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Confirm New Password
+                        </label>
+
+                        <input
+                            type="password"
+                            name="confirm_password"
+                            class="form-control"
+                            minlength="8"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-dark"
+                    >
+                        <i class="bi bi-shield-lock me-1"></i>
+                        Update Password
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    {% if show_edit_profile %}
+
+        const editModal =
+            new bootstrap.Modal(
+                document.getElementById("editProfileModal")
+            );
+
+        editModal.show();
+
+    {% endif %}
+
+
+    {% if show_change_password %}
+
+        const passwordModal =
+            new bootstrap.Modal(
+                document.getElementById("changePasswordModal")
+            );
+
+        passwordModal.show();
+
+    {% endif %}
+
+});
+
+</script>
+
+{% endblock %}

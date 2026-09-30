@@ -1,0 +1,187 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}
+HopeRise Foundation - Edit Event
+{% endblock %}
+
+{% block page_title %}
+Edit Event
+{% endblock %}
+
+{% block page_subtitle %}
+Update event information
+{% endblock %}
+
+{% block content %}
+
+<div class="card p-4">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Event Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    class="form-control"
+                    value="{{ event.name }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    name="location"
+                    class="form-control"
+                    value="{{ event.location }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Event Date
+                </label>
+
+                <input
+                    type="date"
+                    name="event_date"
+                    class="form-control"
+                    value="{{ event.event_date|date:'Y-m-d' }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Event Time
+                </label>
+
+                <input
+                    type="time"
+                    name="event_time"
+                    class="form-control"
+                    value="{% if event.event_time %}{{ event.event_time|time:'H:i' }}{% endif %}"
+                >
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Organizer
+                </label>
+
+                <input
+                    type="text"
+                    name="organizer"
+                    class="form-control"
+                    value="{{ event.organizer|default:'' }}"
+                >
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Status
+                </label>
+
+                <select
+                    name="status"
+                    class="form-select"
+                    required
+                >
+
+                    <option
+                        value="upcoming"
+                        {% if event.status == "upcoming" %}selected{% endif %}
+                    >
+                        Upcoming
+                    </option>
+
+                    <option
+                        value="ongoing"
+                        {% if event.status == "ongoing" %}selected{% endif %}
+                    >
+                        Ongoing
+                    </option>
+
+                    <option
+                        value="completed"
+                        {% if event.status == "completed" %}selected{% endif %}
+                    >
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="col-12">
+
+                <label class="form-label">
+                    Description
+                </label>
+
+                <textarea
+                    name="description"
+                    class="form-control"
+                    rows="5"
+                    required
+                >{{ event.description }}</textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="mt-4 d-flex gap-2">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                <i class="bi bi-check-lg"></i>
+                Save Changes
+            </button>
+
+            <a
+                href="{% url 'events' %}"
+                class="btn btn-secondary"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

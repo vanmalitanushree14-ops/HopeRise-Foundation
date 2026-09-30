@@ -1,0 +1,159 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}
+Edit Project | HopeRise Foundation
+{% endblock %}
+
+{% block page_title %}
+Edit Project
+{% endblock %}
+
+{% block page_subtitle %}
+Update project information.
+{% endblock %}
+
+{% block content %}
+
+<section class="content-card">
+
+    <div class="content-header">
+
+        <div>
+            <h3>Edit Project</h3>
+            <p>Update the project details below.</p>
+        </div>
+
+        <a href="{% url 'projects' %}" class="add-btn">
+            <i class="bi bi-arrow-left"></i>
+            Back to Projects
+        </a>
+
+    </div>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">
+                Project Name
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                name="name"
+                value="{{ project.name }}"
+                required
+            >
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">
+                Description
+            </label>
+
+            <textarea
+                class="form-control"
+                name="description"
+                rows="4"
+                required
+            >{{ project.description }}</textarea>
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">
+                Location
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                name="location"
+                value="{{ project.location }}"
+                required
+            >
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">
+                Status
+            </label>
+
+            <select
+                class="form-select"
+                name="status"
+                required
+            >
+
+                <option
+                    value="ongoing"
+                    {% if project.status == "ongoing" %}selected{% endif %}
+                >
+                    Ongoing
+                </option>
+
+                <option
+                    value="completed"
+                    {% if project.status == "completed" %}selected{% endif %}
+                >
+                    Completed
+                </option>
+
+                <option
+                    value="upcoming"
+                    {% if project.status == "upcoming" %}selected{% endif %}
+                >
+                    Upcoming
+                </option>
+
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">
+                Start Date
+            </label>
+
+            <input
+                type="date"
+                class="form-control"
+                name="start_date"
+                value="{{ project.start_date|date:'Y-m-d' }}"
+                required
+            >
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">
+                End Date
+            </label>
+
+            <input
+                type="date"
+                class="form-control"
+                name="end_date"
+                value="{% if project.end_date %}{{ project.end_date|date:'Y-m-d' }}{% endif %}"
+            >
+        </div>
+
+
+        <button
+            type="submit"
+            class="add-btn"
+        >
+            <i class="bi bi-check-lg"></i>
+            Save Changes
+        </button>
+
+    </form>
+
+</section>
+
+{% endblock %}

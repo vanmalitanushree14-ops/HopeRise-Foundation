@@ -1,0 +1,331 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}Reports | HopeRise Foundation{% endblock %}
+
+{% block page_title %}Reports{% endblock %}
+
+{% block page_subtitle %}
+Overview and summary of HopeRise Foundation activities
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .report-card {
+        background: var(--card-bg, #ffffff);
+        border: 1px solid var(--border-color, #e5e7eb);
+        border-radius: 16px;
+        padding: 22px;
+        height: 100%;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .report-card h5 {
+        margin-bottom: 18px;
+        font-weight: 700;
+    }
+
+    .report-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        background: rgba(13, 110, 253, 0.10);
+        color: #0d6efd;
+        margin-bottom: 14px;
+    }
+
+    .report-number {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .report-label {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .report-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 13px 0;
+        border-bottom: 1px solid var(--border-color, #e5e7eb);
+    }
+
+    .report-row:last-child {
+        border-bottom: none;
+    }
+
+    .report-row span:first-child {
+        color: #6b7280;
+    }
+
+    .report-row strong {
+        font-size: 16px;
+    }
+
+    .section-heading {
+        margin: 30px 0 16px;
+        font-weight: 700;
+    }
+</style>
+
+<!-- SUMMARY CARDS -->
+
+<div class="row g-4">
+
+<div class="col-xl-3 col-md-6">
+    <div class="report-card">
+        <div class="report-icon">
+            <i class="bi bi-cash-stack"></i>
+        </div>
+
+        <div class="report-number">
+            ₹{{ total_donations|floatformat:2 }}
+        </div>
+
+        <div class="report-label">
+            Total Donations
+        </div>
+    </div>
+</div>
+
+
+<div class="col-xl-3 col-md-6">
+    <div class="report-card">
+        <div class="report-icon">
+            <i class="bi bi-people"></i>
+        </div>
+
+        <div class="report-number">
+            {{ total_volunteers }}
+        </div>
+
+        <div class="report-label">
+            Total Volunteers
+        </div>
+    </div>
+</div>
+
+
+<div class="col-xl-3 col-md-6">
+    <div class="report-card">
+        <div class="report-icon">
+            <i class="bi bi-kanban"></i>
+        </div>
+
+        <div class="report-number">
+            {{ total_projects }}
+        </div>
+
+        <div class="report-label">
+            Total Projects
+        </div>
+    </div>
+</div>
+
+
+<div class="col-xl-3 col-md-6">
+    <div class="report-card">
+        <div class="report-icon">
+            <i class="bi bi-person-heart"></i>
+        </div>
+
+        <div class="report-number">
+            {{ total_beneficiaries }}
+        </div>
+
+        <div class="report-label">
+            Total Beneficiaries
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- DONATIONS + VOLUNTEERS -->
+
+<h4 class="section-heading">Donations & Volunteers</h4>
+
+<div class="row g-4">
+
+<div class="col-lg-6">
+
+    <div class="report-card">
+
+        <h5>
+            <i class="bi bi-cash-coin me-2"></i>
+            Donation Report
+        </h5>
+
+        <div class="report-row">
+            <span>Total Amount</span>
+            <strong>₹{{ total_donations|floatformat:2 }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Completed Donations</span>
+            <strong>{{ completed_donations }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Pending Donations</span>
+            <strong>{{ pending_donations }}</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="col-lg-6">
+
+    <div class="report-card">
+
+        <h5>
+            <i class="bi bi-people me-2"></i>
+            Volunteer Report
+        </h5>
+
+        <div class="report-row">
+            <span>Total Volunteers</span>
+            <strong>{{ total_volunteers }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Active Volunteers</span>
+            <strong>{{ active_volunteers }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Pending Volunteers</span>
+            <strong>{{ pending_volunteers }}</strong>
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- PROJECTS + BENEFICIARIES -->
+
+<h4 class="section-heading">Projects & Beneficiaries</h4>
+
+<div class="row g-4">
+
+<div class="col-lg-6">
+
+    <div class="report-card">
+
+        <h5>
+            <i class="bi bi-kanban me-2"></i>
+            Project Report
+        </h5>
+
+        <div class="report-row">
+            <span>Total Projects</span>
+            <strong>{{ total_projects }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Ongoing Projects</span>
+            <strong>{{ ongoing_projects }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Completed Projects</span>
+            <strong>{{ completed_projects }}</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="col-lg-6">
+
+    <div class="report-card">
+
+        <h5>
+            <i class="bi bi-person-heart me-2"></i>
+            Beneficiary Report
+        </h5>
+
+        <div class="report-row">
+            <span>Total Beneficiaries</span>
+            <strong>{{ total_beneficiaries }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Active Beneficiaries</span>
+            <strong>{{ active_beneficiaries }}</strong>
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- CAMPAIGNS + EVENTS -->
+
+<h4 class="section-heading">Campaigns & Events</h4>
+
+<div class="row g-4">
+
+<div class="col-lg-6">
+
+    <div class="report-card">
+
+        <h5>
+            <i class="bi bi-megaphone me-2"></i>
+            Campaign Report
+        </h5>
+
+        <div class="report-row">
+            <span>Total Campaigns</span>
+            <strong>{{ total_campaigns }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Active Campaigns</span>
+            <strong>{{ active_campaigns }}</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="col-lg-6">
+
+    <div class="report-card">
+
+        <h5>
+            <i class="bi bi-calendar-event me-2"></i>
+            Event Report
+        </h5>
+
+        <div class="report-row">
+            <span>Total Events</span>
+            <strong>{{ total_events }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Upcoming Events</span>
+            <strong>{{ upcoming_events }}</strong>
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}

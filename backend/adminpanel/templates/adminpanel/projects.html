@@ -1,0 +1,599 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}
+Projects | HopeRise Foundation
+{% endblock %}
+
+{% block page_title %}
+Projects
+{% endblock %}
+
+{% block page_subtitle %}
+Manage HopeRise Foundation projects.
+{% endblock %}
+
+{% block content %}
+
+<!-- =========================
+     PROJECT STATS
+========================= -->
+
+<section class="stats">
+
+    <div class="stat-card" style="--card-color:#6541e8;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-kanban-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            {{ total_projects }}
+        </div>
+
+        <div class="stat-label">
+            Total Projects
+        </div>
+
+    </div>
+
+
+    <div class="stat-card" style="--card-color:#18b981;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-play-circle-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            {{ ongoing_projects }}
+        </div>
+
+        <div class="stat-label">
+            Ongoing Projects
+        </div>
+
+    </div>
+
+
+    <div class="stat-card" style="--card-color:#3182ce;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            {{ completed_projects }}
+        </div>
+
+        <div class="stat-label">
+            Completed Projects
+        </div>
+
+    </div>
+
+
+    <div class="stat-card" style="--card-color:#f59e0b;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-calendar-event-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            {{ upcoming_projects }}
+        </div>
+
+        <div class="stat-label">
+            Upcoming Projects
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROJECT MANAGEMENT
+========================= -->
+
+<section class="content-card">
+
+    <div class="content-header">
+
+        <div>
+
+            <h3>All Projects</h3>
+
+            <p>
+                View and manage HopeRise Foundation projects.
+            </p>
+
+        </div>
+
+        <button
+    type="button"
+    class="add-btn"
+    onclick="openProjectForm()"
+>
+    <i class="bi bi-plus-lg"></i>
+    Add Project
+</button>
+
+    </div>
+
+
+    <!-- PROJECT GRID -->
+
+    <div
+        style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:18px;
+        "
+    >
+
+        {% for project in projects %}
+
+<div
+    class="card"
+    style="overflow:hidden;"
+>
+
+    <div
+        style="
+            height:8px;
+            background:
+            {% if project.status == 'ongoing' %}
+                linear-gradient(90deg,#6541e8,#8b5cf6);
+            {% elif project.status == 'completed' %}
+                linear-gradient(90deg,#18b981,#34d399);
+            {% else %}
+                linear-gradient(90deg,#f59e0b,#fbbf24);
+            {% endif %}
+        "
+    ></div>
+
+
+    <div style="padding:20px;">
+
+        <div
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:flex-start;
+                gap:10px;
+                margin-bottom:12px;
+            "
+        >
+
+            <h3
+                style="
+                    font-size:15px;
+                    margin:0;
+                "
+            >
+                {{ project.name }}
+            </h3>
+
+
+            {% if project.status == "ongoing" %}
+
+                <span class="status active">
+                    Ongoing
+                </span>
+
+            {% elif project.status == "completed" %}
+
+                <span class="status completed">
+                    Completed
+                </span>
+
+            {% else %}
+
+                <span class="status pending">
+                    Upcoming
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <p
+            style="
+                color:var(--muted);
+                font-size:10px;
+                line-height:1.6;
+                min-height:48px;
+            "
+        >
+            {{ project.description }}
+        </p>
+
+
+        <div
+            style="
+                margin-top:15px;
+                padding-top:14px;
+                border-top:1px solid var(--border);
+            "
+        >
+
+            <div
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:7px;
+                    color:var(--muted);
+                    font-size:10px;
+                    margin-bottom:7px;
+                "
+            >
+                <i class="bi bi-geo-alt-fill"></i>
+                {{ project.location }}
+            </div>
+
+
+            <div
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:7px;
+                    color:var(--muted);
+                    font-size:10px;
+                "
+            >
+                <i class="bi bi-calendar-event-fill"></i>
+
+                {{ project.start_date|date:"d M Y" }}
+
+                {% if project.end_date %}
+                    - {{ project.end_date|date:"d M Y" }}
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div
+            style="
+                display:flex;
+                gap:7px;
+                margin-top:18px;
+                padding-top:14px;
+                border-top:1px solid var(--border);
+            "
+        >
+
+            <a
+                href="{% url 'project_view' project.id %}"
+                class="action-btn"
+                title="View"
+            >
+                <i class="bi bi-eye-fill"></i>
+            </a>
+
+
+            <a
+                href="{% url 'project_edit' project.id %}"
+                class="action-btn"
+                title="Edit"
+            >
+                <i class="bi bi-pencil-fill"></i>
+            </a>
+
+
+            <button
+                type="button"
+                class="action-btn"
+                title="Delete"
+                onclick="deleteProject(
+                    {{ project.id }},
+                    '{{ project.name|escapejs }}'
+                )"
+            >
+                <i class="bi bi-trash-fill"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+        {% empty %}
+
+        <div
+            style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:60px 20px;
+                color:var(--muted);
+            "
+        >
+
+            <i
+                class="bi bi-kanban"
+                style="
+                    font-size:45px;
+                    display:block;
+                    margin-bottom:15px;
+                "
+            ></i>
+
+            <h3
+                style="
+                    color:var(--text);
+                    font-size:16px;
+                    margin-bottom:7px;
+                "
+            >
+                No Projects Found
+            </h3>
+
+            <p style="font-size:11px;">
+                Add your first HopeRise Foundation project.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+<!-- =========================
+     ADD PROJECT MODAL
+========================= -->
+
+<div
+    class="modal fade"
+    id="projectModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div
+                class="modal-header"
+                style="
+                    background:linear-gradient(135deg,#6541e8,#8b5cf6);
+                    color:white;
+                "
+            >
+
+                <h5 class="modal-title">
+                    <i class="bi bi-kanban-fill"></i>
+                    Add Project
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Project Name
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="name"
+                            placeholder="Enter project name"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            class="form-control"
+                            name="description"
+                            rows="3"
+                            placeholder="Enter project description"
+                            required
+                        ></textarea>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Location
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="location"
+                            placeholder="Enter project location"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select
+                            class="form-select"
+                            name="status"
+                            required
+                        >
+
+                            <option value="ongoing">
+                                Ongoing
+                            </option>
+
+                            <option value="completed">
+                                Completed
+                            </option>
+
+                            <option value="upcoming">
+                                Upcoming
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Start Date
+                        </label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            name="start_date"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            End Date
+                        </label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            name="end_date"
+                        >
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="add-btn w-100"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                        Add Project
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+function openProjectForm() {
+
+    const modalElement =
+        document.getElementById("projectModal");
+
+    const modal =
+        new bootstrap.Modal(modalElement);
+
+    modal.show();
+
+}
+
+
+function deleteProject(id, name) {
+
+    if (!confirm(
+        "Are you sure you want to delete the project '" +
+        name +
+        "'?"
+    )) {
+        return;
+    }
+
+
+    const form =
+        document.createElement("form");
+
+    form.method = "POST";
+
+    form.action =
+        "{% url 'project_delete' 0 %}".replace("0", id);
+
+
+    const csrfToken =
+        document.querySelector(
+            "[name=csrfmiddlewaretoken]"
+        );
+
+
+    if (!csrfToken) {
+
+        alert(
+            "Security token not found. Please refresh the page."
+        );
+
+        return;
+    }
+
+
+    const csrfInput =
+        document.createElement("input");
+
+    csrfInput.type = "hidden";
+
+    csrfInput.name =
+        "csrfmiddlewaretoken";
+
+    csrfInput.value =
+        csrfToken.value;
+
+
+    form.appendChild(csrfInput);
+
+    document.body.appendChild(form);
+
+    form.submit();
+
+}
+
+</script>
+
+{% endblock %}
+

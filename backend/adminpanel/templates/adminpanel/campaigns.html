@@ -1,0 +1,605 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}Campaigns | HopeRise Foundation{% endblock %}
+
+{% block page_title %}
+Campaigns
+{% endblock %}
+
+{% block page_subtitle %}
+Create, manage, and monitor HopeRise Foundation campaigns.
+{% endblock %}
+
+{% block content %}
+
+<!-- Campaign Statistics -->
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Total Campaigns</p>
+                <h2 class="fw-bold mb-0">{{ total_campaigns }}</h2>
+                <i class="bi bi-megaphone fs-2 text-primary"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Active</p>
+                <h2 class="fw-bold mb-0">{{ active_campaigns }}</h2>
+                <i class="bi bi-play-circle fs-2 text-success"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Completed</p>
+                <h2 class="fw-bold mb-0">{{ completed_campaigns }}</h2>
+                <i class="bi bi-check-circle fs-2 text-secondary"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Upcoming</p>
+                <h2 class="fw-bold mb-0">{{ upcoming_campaigns }}</h2>
+                <i class="bi bi-calendar-event fs-2 text-warning"></i>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Add Campaign -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h5 class="fw-bold mb-1">Add Campaign</h5>
+                <p class="text-muted mb-0">
+                    Create a new fundraising or support campaign.
+                </p>
+            </div>
+
+            <i class="bi bi-megaphone fs-2 text-primary"></i>
+
+        </div>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">Campaign Name</label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        placeholder="Enter campaign name"
+                        required
+                    >
+                </div>
+
+
+                <div class="col-md-6">
+                    <label class="form-label">Status</label>
+
+                    <select
+                        name="status"
+                        class="form-select"
+                        required
+                    >
+                        <option value="upcoming">Upcoming</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+
+                <div class="col-12">
+
+                    <label class="form-label">
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Describe the campaign"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Target Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        name="target_amount"
+                        class="form-control"
+                        min="0"
+                        step="0.01"
+                        placeholder="100000"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Raised Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        name="raised_amount"
+                        class="form-control"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Start Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="start_date"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        End Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="end_date"
+                        class="form-control"
+                    >
+
+                </div>
+
+
+                <div class="col-12 text-end">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary px-4"
+                    >
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Add Campaign
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Campaign Records -->
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h5 class="fw-bold mb-1">
+                    Campaign Records
+                </h5>
+
+                <p class="text-muted mb-0">
+                    View all HopeRise campaigns.
+                </p>
+            </div>
+
+            <span class="badge bg-primary">
+                {{ total_campaigns }} Campaigns
+            </span>
+
+        </div>
+
+
+        <!-- Search and Filter -->
+
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-8">
+
+                <input
+                    type="text"
+                    id="campaignSearch"
+                    class="form-control"
+                    placeholder="Search campaign name or description..."
+                >
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <select
+                    id="campaignStatusFilter"
+                    class="form-select"
+                >
+
+                    <option value="all">
+                        All Status
+                    </option>
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="completed">
+                        Completed
+                    </option>
+
+                    <option value="upcoming">
+                        Upcoming
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Target</th>
+                        <th>Raised</th>
+                        <th>Progress</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="campaignTable">
+
+                    {% for campaign in campaigns %}
+
+                    <tr
+                        data-status="{{ campaign.status }}"
+                        data-search="{{ campaign.name }} {{ campaign.description }}"
+                    >
+
+                        <td>
+
+                            <strong>
+                                {{ campaign.name }}
+                            </strong>
+
+                            <br>
+
+                            <small class="text-muted">
+                                {{ campaign.description|truncatechars:45 }}
+                            </small>
+
+                        </td>
+
+
+                        <td>
+                            ₹{{ campaign.target_amount }}
+                        </td>
+
+
+                        <td>
+                            ₹{{ campaign.raised_amount }}
+                        </td>
+
+
+                        <td style="min-width:150px;">
+
+                            {% if campaign.target_amount > 0 %}
+
+                                {% widthratio campaign.raised_amount campaign.target_amount 100 as progress %}
+
+                                <div
+                                    class="progress"
+                                    style="height:7px;"
+                                >
+
+                                    <div
+                                        class="progress-bar"
+                                        role="progressbar"
+                                        style="width:{{ progress }}%;"
+                                    ></div>
+
+                                </div>
+
+                                <small class="text-muted">
+                                    {{ progress }}%
+                                </small>
+
+                            {% else %}
+
+                                <small class="text-muted">
+                                    0%
+                                </small>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ campaign.start_date|date:"d M Y" }}
+                        </td>
+
+
+                        <td>
+
+                            {% if campaign.end_date %}
+                                {{ campaign.end_date|date:"d M Y" }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if campaign.status == "active" %}
+
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+
+                            {% elif campaign.status == "completed" %}
+
+                                <span class="badge bg-secondary">
+                                    Completed
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Upcoming
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="d-flex gap-1">
+
+                                <a
+                                    href="{% url 'campaign_view' campaign.id %}"
+                                    class="btn btn-sm btn-outline-primary"
+                                    title="View"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+
+                                <a
+                                    href="{% url 'campaign_edit' campaign.id %}"
+                                    class="btn btn-sm btn-outline-warning"
+                                    title="Edit"
+                                >
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    title="Delete"
+                                    onclick="deleteCampaign(
+                                        {{ campaign.id }},
+                                        '{{ campaign.name|escapejs }}'
+                                    )"
+                                >
+                                    <i class="bi bi-trash"></i>
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            class="text-center text-muted py-5"
+                        >
+
+                            <i class="bi bi-megaphone fs-1 d-block mb-2"></i>
+
+                            No campaigns found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+const campaignSearch =
+    document.getElementById("campaignSearch");
+
+const campaignStatusFilter =
+    document.getElementById("campaignStatusFilter");
+
+const campaignRows =
+    document.querySelectorAll(
+        "#campaignTable tr[data-status]"
+    );
+
+
+function filterCampaigns() {
+
+    const search =
+        campaignSearch.value
+            .toLowerCase()
+            .trim();
+
+    const status =
+        campaignStatusFilter.value;
+
+
+    campaignRows.forEach(function(row) {
+
+        const text =
+            row.dataset.search.toLowerCase();
+
+        const rowStatus =
+            row.dataset.status;
+
+
+        const matchesSearch =
+            text.includes(search);
+
+        const matchesStatus =
+            status === "all" ||
+            rowStatus === status;
+
+
+        row.style.display =
+            matchesSearch && matchesStatus
+                ? ""
+                : "none";
+
+    });
+
+}
+
+
+campaignSearch.addEventListener(
+    "input",
+    filterCampaigns
+);
+
+
+campaignStatusFilter.addEventListener(
+    "change",
+    filterCampaigns
+);
+
+
+function deleteCampaign(id, name) {
+
+    if (
+        !confirm(
+            "Are you sure you want to delete the campaign '" +
+            name +
+            "'?"
+        )
+    ) {
+        return;
+    }
+
+
+    const form =
+        document.createElement("form");
+
+    form.method = "POST";
+
+    form.action =
+        "{% url 'campaign_delete' 0 %}"
+        .replace("0", id);
+
+
+    const csrfInput =
+        document.createElement("input");
+
+    csrfInput.type = "hidden";
+
+    csrfInput.name =
+        "csrfmiddlewaretoken";
+
+    csrfInput.value =
+        "{{ csrf_token }}";
+
+
+    form.appendChild(csrfInput);
+
+    document.body.appendChild(form);
+
+    form.submit();
+
+}
+
+</script>
+
+{% endblock %}

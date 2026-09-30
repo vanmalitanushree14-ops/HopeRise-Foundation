@@ -1,0 +1,607 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}
+Donations | HopeRise Foundation
+{% endblock %}
+
+{% block page_title %}
+Donations 💰
+{% endblock %}
+
+{% block page_subtitle %}
+Manage and monitor HopeRise Foundation donations.
+{% endblock %}
+
+{% block content %}
+
+<!-- =========================
+     DONATION STATS
+========================= -->
+
+<section class="stats">
+
+    <div class="stat-card" style="--card-color:#6541e8;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            ₹{{ total_donations }}
+        </div>
+
+        <div class="stat-label">
+            Total Donations
+        </div>
+
+    </div>
+
+
+    <div class="stat-card" style="--card-color:#18b981;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            {{ completed_donations }}
+        </div>
+
+        <div class="stat-label">
+            Completed Donations
+        </div>
+
+    </div>
+
+
+    <div class="stat-card" style="--card-color:#f59e0b;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-clock-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            {{ pending_donations }}
+        </div>
+
+        <div class="stat-label">
+            Pending Donations
+        </div>
+
+    </div>
+
+
+    <div class="stat-card" style="--card-color:#ef476f;">
+
+        <div class="stat-top">
+
+            <div class="stat-icon">
+                <i class="bi bi-calendar-check-fill"></i>
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            {{ donations|length }}
+        </div>
+
+        <div class="stat-label">
+            Donation Records
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     DONATION MANAGEMENT
+========================= -->
+
+<section class="content-card">
+
+    <div class="content-header">
+
+        <div>
+
+            <h3>Donation Management</h3>
+
+            <p>
+                View, search and manage HopeRise Foundation donations.
+            </p>
+
+        </div>
+
+        <button
+            class="add-btn"
+            onclick="openDonationForm()"
+        >
+            <i class="bi bi-plus-lg"></i>
+            Add Donation
+        </button>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <div class="search-box">
+
+            <i class="bi bi-search"></i>
+
+            <input
+                type="text"
+                id="donationSearch"
+                placeholder="Search donor name or email..."
+            >
+
+        </div>
+
+        <select
+            class="filter-select"
+            id="donationStatusFilter"
+        >
+
+            <option value="all">
+                All Status
+            </option>
+
+            <option value="completed">
+                Completed
+            </option>
+
+            <option value="pending">
+                Pending
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="table-wrapper">
+
+        <table id="donationTable">
+
+            <thead>
+
+                <tr>
+                    <th>Donor</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for donation in donations %}
+
+                <tr data-status="{{ donation.status }}">
+
+                    <td>
+
+                        <strong>
+                            {{ donation.donor_name }}
+                        </strong>
+
+                        <div
+                            style="
+                                color:var(--muted);
+                                font-size:9px;
+                                margin-top:3px;
+                            "
+                        >
+                            {{ donation.email }}
+                        </div>
+
+                    </td>
+
+                    <td>
+                        ₹{{ donation.amount }}
+                    </td>
+
+                    <td>
+                        Donation
+                    </td>
+
+                    <td>
+
+                        {% if donation.status == "completed" %}
+
+                            <span class="status completed">
+                                Completed
+                            </span>
+
+                        {% else %}
+
+                            <span class="status pending">
+                                Pending
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ donation.donation_date|date:"d M Y" }}
+                    </td>
+
+                    <td>
+
+                        <div style="display:flex; gap:5px;">
+
+    <!-- VIEW -->
+    <a
+        href="{% url 'donation_view' donation.id %}"
+        class="action-btn"
+        title="View"
+    >
+        <i class="bi bi-eye-fill"></i>
+    </a>
+
+
+    <!-- EDIT -->
+    <a
+        href="{% url 'donation_edit' donation.id %}"
+        class="action-btn"
+        title="Edit"
+    >
+        <i class="bi bi-pencil-fill"></i>
+    </a>
+
+
+    <!-- DELETE -->
+    <button
+        type="button"
+        class="action-btn"
+        title="Delete"
+        onclick="deleteDonation(
+            {{ donation.id }},
+            '{{ donation.donor_name|escapejs }}'
+        )"
+    >
+        <i class="bi bi-trash-fill"></i>
+    </button>
+
+</div>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        style="text-align:center;padding:40px;"
+                    >
+
+                        <i
+                            class="bi bi-cash-stack"
+                            style="
+                                font-size:35px;
+                                display:block;
+                                margin-bottom:10px;
+                            "
+                        ></i>
+
+                        No donations found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ADD DONATION MODAL
+========================= -->
+
+<div
+    class="modal fade"
+    id="donationModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div
+                class="modal-header"
+                style="
+                    background:linear-gradient(135deg,#6541e8,#8b5cf6);
+                    color:white;
+                "
+            >
+
+                <h5 class="modal-title">
+                    <i class="bi bi-cash-stack"></i>
+                    Add Donation
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Donor Name
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="donor_name"
+                            placeholder="Enter donor name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            class="form-control"
+                            name="email"
+                            placeholder="Enter email address"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Amount
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="amount"
+                            placeholder="Enter donation amount"
+                            min="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select
+                            class="form-select"
+                            name="status"
+                        >
+
+                            <option value="completed">
+                                Completed
+                            </option>
+
+                            <option value="pending">
+                                Pending
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="add-btn w-100"
+                    >
+                        Add Donation
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+    /* =========================
+       SEARCH + FILTER
+    ========================= */
+
+    const donationSearch =
+        document.getElementById("donationSearch");
+
+    const donationStatusFilter =
+        document.getElementById("donationStatusFilter");
+
+    const donationRows =
+        document.querySelectorAll("#donationTable tbody tr");
+
+
+    function filterDonations() {
+
+        const searchText =
+            donationSearch.value
+                .toLowerCase()
+                .trim();
+
+        const selectedStatus =
+            donationStatusFilter.value;
+
+
+        donationRows.forEach(row => {
+
+            const rowText =
+                row.innerText.toLowerCase();
+
+            const rowStatus =
+                row.dataset.status;
+
+
+            const matchesSearch =
+                rowText.includes(searchText);
+
+            const matchesStatus =
+                selectedStatus === "all" ||
+                rowStatus === selectedStatus;
+
+
+            row.style.display =
+                matchesSearch && matchesStatus
+                    ? ""
+                    : "none";
+
+        });
+
+    }
+
+
+    donationSearch.addEventListener(
+        "input",
+        filterDonations
+    );
+
+    donationStatusFilter.addEventListener(
+        "change",
+        filterDonations
+    );
+
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    function openDonationForm() {
+
+        const modalElement =
+            document.getElementById("donationModal");
+
+        const modal =
+            new bootstrap.Modal(modalElement);
+
+        modal.show();
+
+    }
+
+
+    /* =========================
+       DELETE DONATION
+    ========================= */
+
+    function deleteDonation(id, name) {
+
+        if (!confirm(
+            "Are you sure you want to delete the donation from " +
+            name +
+            "?"
+        )) {
+            return;
+        }
+
+        const form = document.createElement("form");
+
+        form.method = "POST";
+
+        form.action =
+            "{% url 'donation_delete' 0 %}".replace("0", id);
+
+
+        const csrfToken =
+            document.querySelector(
+                "[name=csrfmiddlewaretoken]"
+            );
+
+        if (!csrfToken) {
+
+            alert(
+                "Security token not found. Please refresh the page."
+            );
+
+            return;
+        }
+
+
+        const csrfInput =
+            document.createElement("input");
+
+        csrfInput.type = "hidden";
+
+        csrfInput.name =
+            "csrfmiddlewaretoken";
+
+        csrfInput.value =
+            csrfToken.value;
+
+
+        form.appendChild(csrfInput);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+    }
+
+</script>
+
+{% endblock %}

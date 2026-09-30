@@ -1,0 +1,488 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}Beneficiaries | HopeRise Foundation{% endblock %}
+
+{% block page_title %}
+Beneficiaries
+{% endblock %}
+
+{% block page_subtitle %}
+Manage and monitor people receiving support from HopeRise Foundation.
+{% endblock %}
+
+{% block content %}
+
+<!-- Statistics -->
+<div class="row g-4 mb-4">
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Total Beneficiaries</p>
+                <h2 class="fw-bold mb-0">{{ total_beneficiaries }}</h2>
+                <i class="bi bi-people fs-1 text-primary"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Active</p>
+                <h2 class="fw-bold mb-0">{{ active_beneficiaries }}</h2>
+                <i class="bi bi-person-check fs-1 text-success"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Inactive</p>
+                <h2 class="fw-bold mb-0">{{ inactive_beneficiaries }}</h2>
+                <i class="bi bi-person-x fs-1 text-secondary"></i>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Add Beneficiary -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h5 class="fw-bold mb-1">Add Beneficiary</h5>
+                <p class="text-muted mb-0">
+                    Register a new person receiving support.
+                </p>
+            </div>
+
+            <i class="bi bi-person-plus fs-2 text-primary"></i>
+
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        placeholder="Enter full name"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="Enter email"
+                    >
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Phone</label>
+                    <input
+                        type="text"
+                        name="phone"
+                        class="form-control"
+                        placeholder="Enter phone number"
+                    >
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Age</label>
+                    <input
+                        type="number"
+                        name="age"
+                        class="form-control"
+                        placeholder="Enter age"
+                        min="0"
+                    >
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Location</label>
+                    <input
+                        type="text"
+                        name="location"
+                        class="form-control"
+                        placeholder="Enter location"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Support Type</label>
+                    <input
+                        type="text"
+                        name="support_type"
+                        class="form-control"
+                        placeholder="e.g. Education, Food, Medical"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="col-12 text-end">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary px-4"
+                    >
+                        <i class="bi bi-person-plus me-2"></i>
+                        Add Beneficiary
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Beneficiary Records -->
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h5 class="fw-bold mb-1">
+                    Beneficiary Records
+                </h5>
+
+                <p class="text-muted mb-0">
+                    View all registered beneficiaries.
+                </p>
+            </div>
+
+            <span class="badge bg-primary">
+                {{ total_beneficiaries }} Records
+            </span>
+
+        </div>
+
+
+        <!-- Search and Filter -->
+
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-8">
+
+                <input
+                    type="text"
+                    id="beneficiarySearch"
+                    class="form-control"
+                    placeholder="Search by name, email, location or support type..."
+                >
+
+            </div>
+
+            <div class="col-md-4">
+
+                <select
+                    id="beneficiaryStatusFilter"
+                    class="form-select"
+                >
+
+                    <option value="all">
+                        All Status
+                    </option>
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Age</th>
+                        <th>Location</th>
+                        <th>Support Type</th>
+                        <th>Status</th>
+                        <th>Registered</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="beneficiaryTable">
+
+                    {% for beneficiary in beneficiaries %}
+
+                    <tr
+                        data-status="{{ beneficiary.status }}"
+                        data-search="
+                            {{ beneficiary.name }}
+                            {{ beneficiary.email }}
+                            {{ beneficiary.location }}
+                            {{ beneficiary.support_type }}
+                        "
+                    >
+
+                        <td>
+                            <strong>
+                                {{ beneficiary.name }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ beneficiary.email|default:"—" }}
+                        </td>
+
+                        <td>
+                            {{ beneficiary.phone|default:"—" }}
+                        </td>
+
+                        <td>
+                            {{ beneficiary.age|default:"—" }}
+                        </td>
+
+                        <td>
+                            {{ beneficiary.location }}
+                        </td>
+
+                        <td>
+                            {{ beneficiary.support_type }}
+                        </td>
+
+                        <td>
+
+                            {% if beneficiary.status == "active" %}
+
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    Inactive
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ beneficiary.registered_date|date:"d M Y" }}
+                        </td>
+
+                        <td>
+
+                            <div class="d-flex gap-1">
+
+                                <a
+                                    href="{% url 'beneficiary_view' beneficiary.id %}"
+                                    class="btn btn-sm btn-outline-primary"
+                                    title="View"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                <a
+                                    href="{% url 'beneficiary_edit' beneficiary.id %}"
+                                    class="btn btn-sm btn-outline-warning"
+                                    title="Edit"
+                                >
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    title="Delete"
+                                    onclick="deleteBeneficiary(
+                                        {{ beneficiary.id }},
+                                        '{{ beneficiary.name|escapejs }}'
+                                    )"
+                                >
+                                    <i class="bi bi-trash"></i>
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="9"
+                            class="text-center text-muted py-5"
+                        >
+
+                            <i class="bi bi-people fs-1 d-block mb-2"></i>
+
+                            No beneficiaries found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+const searchInput =
+    document.getElementById("beneficiarySearch");
+
+const statusFilter =
+    document.getElementById("beneficiaryStatusFilter");
+
+const rows =
+    document.querySelectorAll("#beneficiaryTable tr[data-status]");
+
+
+function filterBeneficiaries() {
+
+    const search =
+        searchInput.value.toLowerCase().trim();
+
+    const status =
+        statusFilter.value;
+
+    rows.forEach(function(row) {
+
+        const text =
+            row.dataset.search.toLowerCase();
+
+        const rowStatus =
+            row.dataset.status;
+
+        const matchesSearch =
+            text.includes(search);
+
+        const matchesStatus =
+            status === "all" ||
+            rowStatus === status;
+
+        row.style.display =
+            matchesSearch && matchesStatus
+                ? ""
+                : "none";
+
+    });
+
+}
+
+
+searchInput.addEventListener(
+    "input",
+    filterBeneficiaries
+);
+
+statusFilter.addEventListener(
+    "change",
+    filterBeneficiaries
+);
+
+
+function deleteBeneficiary(id, name) {
+
+    if (
+        !confirm(
+            "Are you sure you want to delete the beneficiary '" +
+            name +
+            "'?"
+        )
+    ) {
+        return;
+    }
+
+    const form =
+        document.createElement("form");
+
+    form.method = "POST";
+
+    form.action =
+        "{% url 'beneficiary_delete' 0 %}"
+        .replace("0", id);
+
+    const csrfInput =
+        document.createElement("input");
+
+    csrfInput.type = "hidden";
+
+    csrfInput.name =
+        "csrfmiddlewaretoken";
+
+    csrfInput.value =
+        "{{ csrf_token }}";
+
+    form.appendChild(csrfInput);
+
+    document.body.appendChild(form);
+
+    form.submit();
+
+}
+
+</script>
+
+{% endblock %}

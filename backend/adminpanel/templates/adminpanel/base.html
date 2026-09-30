@@ -1,0 +1,1678 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}HopeRise Foundation{% endblock %}
+    </title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <!-- AOS -->
+    <link
+        href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* ================================
+           ROOT COLORS
+        ================================= */
+
+        :root {
+            --primary: #7b2cbf;
+            --primary-light: #9d4edd;
+            --secondary: #f72585;
+
+            --sidebar: #24104f;
+            --sidebar-2: #3c136d;
+
+            --background: #f6f4fb;
+            --card: #ffffff;
+
+            --text: #29233a;
+            --muted: #777189;
+
+            --border: #e7e1f0;
+        }
+
+
+        /* ================================
+           BODY
+        ================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+
+        /* ================================
+           SIDEBAR
+        ================================= */
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            min-height: 0;
+
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            z-index: 1000;
+
+            background: linear-gradient(
+                180deg,
+                var(--sidebar),
+                var(--sidebar-2)
+            );
+
+            color: #fff;
+
+            padding: 22px 15px;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            transition:
+                transform 0.3s ease,
+                width 0.3s ease;
+
+            scroll-behavior: smooth;
+        }
+
+
+        /* Sidebar scrollbar */
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.20);
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+
+        /* ================================
+           BRAND
+        ================================= */
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 8px 10px 25px;
+
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(255, 255, 255, 0.14);
+
+            border-radius: 12px;
+
+            font-size: 22px;
+        }
+
+        .brand-text {
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .brand-small {
+            display: block;
+            font-size: 11px;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+
+        /* ================================
+           NAVIGATION
+        ================================= */
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            width: 100%;
+
+            padding: 11px 13px;
+
+            color: rgba(255, 255, 255, 0.78);
+
+            text-decoration: none;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .nav-link i {
+            width: 20px;
+            min-width: 20px;
+
+            text-align: center;
+
+            font-size: 17px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.10);
+            color: #fff;
+
+            transform: translateX(2px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.16);
+            color: #fff;
+
+            box-shadow:
+                inset 3px 0 0 #fff;
+        }
+
+
+        /* ================================
+           SIDEBAR SECTION TITLE
+        ================================= */
+
+        .sidebar-title {
+            padding: 15px 12px 7px;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            color: rgba(255, 255, 255, 0.42);
+        }
+
+
+        /* ================================
+           SIDEBAR CARD
+        ================================= */
+
+        .sidebar-card {
+            margin-top: 20px;
+            padding: 15px;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 14px;
+        }
+
+        .sidebar-card-title {
+            font-size: 13px;
+            font-weight: 600;
+
+            margin-bottom: 5px;
+        }
+
+        .sidebar-card-text {
+            font-size: 11px;
+
+            line-height: 1.5;
+
+            color: rgba(255, 255, 255, 0.65);
+
+            margin-bottom: 12px;
+        }
+
+        .sidebar-card .btn {
+            width: 100%;
+
+            border: none;
+
+            background: #fff;
+            color: var(--primary);
+
+            font-size: 12px;
+            font-weight: 600;
+
+            border-radius: 8px;
+
+            padding: 8px 10px;
+        }
+
+
+        /* ================================
+           LOGOUT
+        ================================= */
+
+        .logout-link {
+            margin-top: 10px;
+        }
+
+        .logout-link .nav-link {
+            color: #ffb6c5;
+        }
+
+        .logout-link .nav-link:hover {
+            background: rgba(239, 71, 111, 0.18);
+            color: #fff;
+        }
+
+
+        /* ================================
+           MAIN CONTENT
+        ================================= */
+
+        .main-content {
+            margin-left: 260px;
+
+            min-height: 100vh;
+
+            padding: 25px;
+        }
+
+
+        /* ================================
+           TOP BAR
+        ================================= */
+
+        .topbar {
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: 16px;
+
+            padding: 14px 18px;
+
+            margin-bottom: 25px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow:
+                0 5px 20px rgba(44, 20, 75, 0.04);
+        }
+
+        .page-title {
+            margin: 0;
+
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            margin: 3px 0 0;
+
+            font-size: 12px;
+
+            color: var(--muted);
+        }
+
+
+        /* ================================
+           CARDS
+        ================================= */
+
+        .card {
+            border: 1px solid var(--border);
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 5px 20px rgba(44, 20, 75, 0.04);
+        }
+
+
+        /* ================================
+           BUTTONS
+        ================================= */
+
+        .btn-primary {
+            background: var(--primary);
+
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+
+            border-color: var(--primary-light);
+        }
+
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 991px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 18px;
+            }
+        }
+
+
+        @media (max-width: 576px) {
+
+            .main-content {
+                padding: 12px;
+            }
+
+            .topbar {
+                padding: 12px;
+            }
+
+            .page-title {
+                font-size: 19px;
+            }
+        }
+
+        /* =========================================
+   DASHBOARD STATISTICS
+========================================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    position: relative;
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    padding: 20px;
+
+    min-height: 135px;
+
+    box-shadow:
+        0 5px 20px rgba(44, 20, 75, 0.05);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.stat-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background: var(--card-color, var(--primary));
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 28px rgba(44, 20, 75, 0.10);
+}
+
+.stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 14px;
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: color-mix(
+        in srgb,
+        var(--card-color, var(--primary)) 12%,
+        white
+    );
+
+    color: var(--card-color, var(--primary));
+
+    font-size: 19px;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.08) rotate(3deg);
+}
+
+.stat-value,
+.stat-number {
+    font-size: 25px;
+
+    font-weight: 800;
+
+    color: var(--text);
+
+    line-height: 1.2;
+
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 11px;
+
+    color: var(--muted);
+
+    font-weight: 500;
+}
+
+
+/* =========================================
+   CONTENT CARD
+========================================= */
+
+.content-card {
+    background: #fff;
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    margin-bottom: 24px;
+
+    box-shadow:
+        0 5px 20px rgba(44, 20, 75, 0.04);
+
+    animation: fadeUp 0.45s ease both;
+}
+
+.content-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.content-header h3 {
+    margin: 0 0 5px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    color: var(--text);
+}
+
+.content-header p {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   ADD BUTTON
+========================================= */
+
+.add-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border: none;
+
+    background: linear-gradient(
+        135deg,
+        #6541e8,
+        #8b5cf6
+    );
+
+    color: white;
+
+    padding: 9px 15px;
+
+    border-radius: 9px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.add-btn:hover {
+    color: white;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 18px rgba(101, 65, 232, 0.25);
+}
+
+
+/* =========================================
+   FILTERS
+========================================= */
+
+.filters {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+
+    flex: 1;
+
+    min-width: 220px;
+}
+
+.search-box i {
+    position: absolute;
+
+    left: 13px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.search-box input {
+    width: 100%;
+
+    height: 40px;
+
+    padding: 0 13px 0 37px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 11px;
+
+    color: var(--text);
+
+    background: #fff;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.search-box input:focus {
+    border-color: #8b5cf6;
+
+    box-shadow:
+        0 0 0 3px rgba(139, 92, 246, 0.10);
+}
+
+.filter-select {
+    height: 40px;
+
+    min-width: 145px;
+
+    padding: 0 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    background: #fff;
+
+    color: var(--text);
+
+    font-size: 11px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+.filter-select:focus {
+    border-color: #8b5cf6;
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+.table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+}
+
+.table-wrapper table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 700px;
+}
+
+.table-wrapper th {
+    padding: 13px 15px;
+
+    background: #faf8fd;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-align: left;
+
+    border-bottom: 1px solid var(--border);
+
+    white-space: nowrap;
+}
+
+.table-wrapper td {
+    padding: 14px 15px;
+
+    font-size: 10px;
+
+    color: var(--text);
+
+    border-bottom: 1px solid var(--border);
+
+    vertical-align: middle;
+}
+
+.table-wrapper tbody tr {
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.table-wrapper tbody tr:hover {
+    background: #faf8ff;
+}
+
+.table-wrapper tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================
+   VOLUNTEER TABLE
+========================================= */
+
+.volunteer-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+
+/* =========================================
+   STATUS BADGES
+========================================= */
+
+.status {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.status.active {
+    background: #e8f8f1;
+
+    color: #15966b;
+}
+
+.status.completed {
+    background: #e8f1ff;
+
+    color: #3182ce;
+}
+
+.status.pending {
+    background: #fff5df;
+
+    color: #d58a00;
+}
+
+.status.inactive {
+    background: #ffe9ee;
+
+    color: #df365e;
+}
+
+
+/* =========================================
+   ACTION BUTTON
+========================================= */
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    background: #fff;
+
+    color: var(--primary);
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.action-btn:hover {
+    background: var(--primary);
+
+    color: #fff;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   MODALS
+========================================= */
+
+.modal-content {
+    border: none;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 50px rgba(35, 16, 79, 0.20);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-title {
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+.modal-body {
+    padding: 22px;
+}
+
+.form-label {
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: var(--text);
+}
+
+.form-control,
+.form-select {
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    font-size: 11px;
+
+    padding: 10px 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #8b5cf6;
+
+    box-shadow:
+        0 0 0 3px rgba(139, 92, 246, 0.10);
+}
+
+
+/* =========================================
+   PAGE ANIMATION
+========================================= */
+
+@keyframes fadeUp {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================
+   CARD ANIMATION
+========================================= */
+
+.stat-card {
+    animation: fadeUp 0.5s ease both;
+}
+
+.stat-card:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.stat-card:nth-child(2) {
+    animation-delay: 0.10s;
+}
+
+.stat-card:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.stat-card:nth-child(4) {
+    animation-delay: 0.20s;
+}
+
+
+/* =========================================
+   PROJECT CARD HOVER
+========================================= */
+
+.content-card .card {
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    background: #fff;
+
+    box-shadow:
+        0 5px 18px rgba(44, 20, 75, 0.04);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.content-card .card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 28px rgba(44, 20, 75, 0.10);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .content-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .content-header .add-btn {
+        width: 100%;
+    }
+
+    .filters {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .filter-select {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+    }
+
+}
+
+        
+    </style>
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     SIDEBAR
+========================================= -->
+
+<aside class="sidebar">
+
+    <!-- BRAND -->
+
+    <a href="{% url 'dashboard' %}" class="brand">
+
+        <div class="brand-icon">
+            <i class="bi bi-heart-fill"></i>
+        </div>
+
+        <div class="brand-text">
+            HopeRise
+            <span class="brand-small">
+                Foundation Admin
+            </span>
+        </div>
+
+    </a>
+
+
+    <!-- MAIN MENU -->
+
+    <div class="sidebar-title">
+        Main
+    </div>
+
+    <ul>
+
+        <!-- Dashboard -->
+
+        <li>
+            <a
+                href="{% url 'dashboard' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+            >
+                <i class="bi bi-grid-fill"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+
+        <!-- Donations -->
+
+        <li>
+            <a
+                href="{% url 'donations' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'donations' %}active{% endif %}"
+            >
+                <i class="bi bi-cash-stack"></i>
+                <span>Donations</span>
+            </a>
+        </li>
+
+
+        <!-- Volunteers -->
+
+        <li>
+            <a
+                href="{% url 'volunteers' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'volunteers' %}active{% endif %}"
+            >
+                <i class="bi bi-people-fill"></i>
+                <span>Volunteers</span>
+            </a>
+        </li>
+
+
+        <!-- Projects -->
+
+        <li>
+            <a
+                href="{% url 'projects' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'projects' %}active{% endif %}"
+            >
+                <i class="bi bi-kanban-fill"></i>
+                <span>Projects</span>
+            </a>
+        </li>
+
+
+        <!-- Beneficiaries -->
+
+        <li>
+            <a
+                href="{% url 'beneficiaries' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'beneficiaries' %}active{% endif %}"
+            >
+                <i class="bi bi-person-hearts"></i>
+                <span>Beneficiaries</span>
+            </a>
+        </li>
+
+    </ul>
+
+
+    <!-- MANAGEMENT -->
+
+    <div class="sidebar-title">
+        Management
+    </div>
+
+    <ul>
+
+        <!-- Campaigns -->
+
+        <li>
+            <a
+                href="{% url 'campaigns' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'campaigns' %}active{% endif %}"
+            >
+                <i class="bi bi-megaphone-fill"></i>
+                <span>Campaigns</span>
+            </a>
+        </li>
+
+
+        <!-- Events -->
+
+        <li>
+            <a
+                href="{% url 'events' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'events' %}active{% endif %}"
+            >
+                <i class="bi bi-calendar-event-fill"></i>
+                <span>Events</span>
+            </a>
+        </li>
+
+
+        <!-- Reports -->
+
+        <li>
+            <a
+                href="{% url 'reports' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}"
+            >
+                <i class="bi bi-bar-chart-fill"></i>
+                <span>Reports</span>
+            </a>
+        </li>
+
+
+        <!-- Messages -->
+
+        <li>
+            <a
+                href="#"
+                class="nav-link"
+            >
+                <i class="bi bi-chat-left-text-fill"></i>
+                <span>Messages</span>
+            </a>
+        </li>
+
+
+        <!-- Settings -->
+
+        <li>
+            <a
+                href="{% url 'settings' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'settings' %}active{% endif %}"
+            >
+                <i class="bi bi-gear-fill"></i>
+                <span>Settings</span>
+            </a>
+        </li>
+
+
+        <!-- Logout -->
+
+        <li class="logout-link">
+
+            <a
+                href="{% url 'logout' %}"
+                class="nav-link"
+            >
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+            </a>
+
+        </li>
+
+    </ul>
+
+
+    <!-- SIDEBAR CARD -->
+
+    <div class="sidebar-card">
+
+        <div class="sidebar-card-title">
+            Keep Making a Difference 💜
+        </div>
+
+        <div class="sidebar-card-text">
+            Every action helps HopeRise Foundation
+            create a better future for communities.
+        </div>
+
+        <a
+            href="{% url 'donations' %}"
+            class="btn"
+        >
+            View Donations
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================
+     MAIN CONTENT
+========================================= -->
+
+<main class="main-content">
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <div>
+
+            <h1 class="page-title">
+                {% block page_title %}
+                Dashboard
+                {% endblock %}
+            </h1>
+
+            <p class="page-subtitle">
+                HopeRise Foundation Management System
+            </p>
+
+        </div>
+
+        <div>
+
+            {% if request.user.is_authenticated %}
+
+                <span class="small text-muted">
+                    <i class="bi bi-person-circle"></i>
+
+                    {{ request.user.full_name }}
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- PAGE CONTENT -->
+
+    {% block content %}
+
+    {% endblock %}
+
+</main>
+
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- AOS -->
+
+<script
+    src="https://unpkg.com/aos@2.3.1/dist/aos.js">
+</script>
+
+<!-- =========================================
+     AUTOMATIC INACTIVITY LOGOUT
+========================================= -->
+
+<script>
+
+    const INACTIVITY_LIMIT = 15 * 60 * 1000; // 15 minutes
+    const WARNING_TIME = 60 * 1000;          // 1 minute warning
+
+    let inactivityTimer = null;
+    let warningTimer = null;
+    let warningShown = false;
+
+
+    // =========================================
+    // LOGOUT
+    // =========================================
+
+    function logoutForInactivity() {
+
+        window.location.href = "{% url 'logout' %}";
+
+    }
+
+
+    // =========================================
+    // SHOW WARNING
+    // =========================================
+
+    function showInactivityWarning() {
+
+        // Don't create it twice
+        if (document.getElementById("inactivityWarning")) {
+            return;
+        }
+
+        warningShown = true;
+
+        const warning = document.createElement("div");
+
+        warning.id = "inactivityWarning";
+
+        warning.innerHTML = `
+            <div style="
+                position:fixed;
+                top:20px;
+                right:20px;
+                z-index:999999;
+                width:340px;
+                max-width:calc(100vw - 40px);
+                background:#ffffff;
+                border:1px solid #e7e1f0;
+                border-left:5px solid #f59e0b;
+                border-radius:14px;
+                padding:18px;
+                box-shadow:0 15px 40px rgba(0,0,0,0.20);
+                font-family:Arial, sans-serif;
+            ">
+
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:10px;
+                    margin-bottom:8px;
+                    color:#29233a;
+                    font-weight:700;
+                    font-size:15px;
+                ">
+
+                    <i class="bi bi-exclamation-triangle-fill"
+                       style="color:#f59e0b;">
+                    </i>
+
+                    Session Expiring
+
+                </div>
+
+
+                <div style="
+                    color:#777189;
+                    font-size:12px;
+                    line-height:1.5;
+                    margin-bottom:14px;
+                ">
+
+                    You have been inactive for a while.
+                    You will be logged out in approximately
+                    <strong>1 minute</strong>.
+
+                </div>
+
+
+                <button
+                    id="continueSessionButton"
+                    type="button"
+                    style="
+                        display:inline-block;
+                        border:none;
+                        background:#7b2cbf;
+                        color:#ffffff;
+                        padding:10px 18px;
+                        border-radius:8px;
+                        font-size:13px;
+                        font-weight:600;
+                        cursor:pointer;
+                        pointer-events:auto;
+                        position:relative;
+                        z-index:1000000;
+                    "
+                >
+                    Continue Session
+                </button>
+
+            </div>
+        `;
+
+        document.body.appendChild(warning);
+
+
+        // =========================================
+        // CONTINUE SESSION BUTTON
+        // =========================================
+
+        const button =
+            document.getElementById("continueSessionButton");
+
+
+        if (button) {
+
+            button.onclick = function(event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                continueSession();
+
+            };
+
+        }
+
+    }
+
+
+    // =========================================
+    // RESET TIMER
+    // =========================================
+
+    function resetInactivityTimer() {
+
+        clearTimeout(inactivityTimer);
+        clearTimeout(warningTimer);
+
+        warningShown = false;
+
+
+        const oldWarning =
+            document.getElementById("inactivityWarning");
+
+
+        if (oldWarning) {
+            oldWarning.remove();
+        }
+
+
+        // Show warning 1 minute before logout
+        warningTimer = setTimeout(
+            showInactivityWarning,
+            INACTIVITY_LIMIT - WARNING_TIME
+        );
+
+
+        // Logout after 15 minutes
+        inactivityTimer = setTimeout(
+            logoutForInactivity,
+            INACTIVITY_LIMIT
+        );
+
+    }
+
+
+    // =========================================
+    // CONTINUE SESSION
+    // =========================================
+
+    function continueSession() {
+
+        console.log("Continue Session clicked");
+
+
+        clearTimeout(inactivityTimer);
+        clearTimeout(warningTimer);
+
+
+        const warning =
+            document.getElementById("inactivityWarning");
+
+
+        if (warning) {
+            warning.remove();
+        }
+
+
+        warningShown = false;
+
+
+        // Make a request to Django so the
+        // server-side session is refreshed.
+        fetch(window.location.href, {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store"
+        })
+        .then(function(response) {
+
+            console.log("Session refreshed");
+
+            resetInactivityTimer();
+
+        })
+        .catch(function(error) {
+
+            console.log("Session refresh failed:", error);
+
+            // Still restart the client timer
+            resetInactivityTimer();
+
+        });
+
+    }
+
+
+    // =========================================
+    // USER ACTIVITY
+    // =========================================
+
+    const activityEvents = [
+        "mousedown",
+        "keydown",
+        "scroll",
+        "touchstart"
+    ];
+
+
+    activityEvents.forEach(function(eventName) {
+
+        document.addEventListener(eventName, function(event) {
+
+            // If warning is visible, don't remove it
+            // because of normal activity.
+            if (warningShown) {
+                return;
+            }
+
+            resetInactivityTimer();
+
+        });
+
+    });
+
+
+    // Mouse movement is handled separately.
+    document.addEventListener("mousemove", function(event) {
+
+        // Once warning appears, mouse movement
+        // must NOT remove the warning.
+        if (warningShown) {
+            return;
+        }
+
+        resetInactivityTimer();
+
+    });
+
+
+    // =========================================
+    // START TIMER
+    // =========================================
+
+    resetInactivityTimer();
+
+</script>
+{% block extra_js %}
+{% endblock %}
+</body>
+</html>
+

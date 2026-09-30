@@ -1,0 +1,130 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}
+Edit Donation | HopeRise Foundation
+{% endblock %}
+
+{% block page_title %}
+Edit Donation 💰
+{% endblock %}
+
+{% block page_subtitle %}
+Update donation information.
+{% endblock %}
+
+{% block content %}
+
+<section class="content-card">
+
+    <div class="content-header">
+
+        <div>
+            <h3>Edit Donation</h3>
+            <p>Update the donor and donation details.</p>
+        </div>
+
+        <a href="{% url 'donations' %}" class="add-btn">
+            <i class="bi bi-arrow-left"></i>
+            Back to Donations
+        </a>
+
+    </div>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">
+                Donor Name
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                name="donor_name"
+                value="{{ donation.donor_name }}"
+                required
+            >
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">
+                Email
+            </label>
+
+            <input
+                type="email"
+                class="form-control"
+                name="email"
+                value="{{ donation.email }}"
+                required
+            >
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">
+                Amount
+            </label>
+
+            <input
+                type="number"
+                class="form-control"
+                name="amount"
+                value="{{ donation.amount }}"
+                min="1"
+                step="0.01"
+                required
+            >
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">
+                Status
+            </label>
+
+            <select
+                class="form-select"
+                name="status"
+                required
+            >
+
+                <option
+                    value="completed"
+                    {% if donation.status == "completed" %}
+                    selected
+                    {% endif %}
+                >
+                    Completed
+                </option>
+
+                <option
+                    value="pending"
+                    {% if donation.status == "pending" %}
+                    selected
+                    {% endif %}
+                >
+                    Pending
+                </option>
+
+            </select>
+        </div>
+
+
+        <button
+            type="submit"
+            class="add-btn"
+        >
+            <i class="bi bi-check-lg"></i>
+            Save Changes
+        </button>
+
+    </form>
+
+</section>
+
+{% endblock %}

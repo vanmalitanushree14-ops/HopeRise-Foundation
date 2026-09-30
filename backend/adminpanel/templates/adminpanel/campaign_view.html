@@ -1,0 +1,202 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}Campaign Details | HopeRise Foundation{% endblock %}
+
+{% block page_title %}
+Campaign Details
+{% endblock %}
+
+{% block page_subtitle %}
+View complete campaign information.
+{% endblock %}
+
+{% block content %}
+
+<section class="content-card">
+
+    <div class="content-header">
+
+        <div>
+            <h3>{{ campaign.name }}</h3>
+            <p>Complete campaign information.</p>
+        </div>
+
+        <a
+            href="{% url 'campaigns' %}"
+            class="add-btn"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to Campaigns
+        </a>
+
+    </div>
+
+
+    <div
+        style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+            margin-top:20px;
+        "
+    >
+
+        <div class="stat-card">
+            <div class="stat-label">Campaign Name</div>
+            <div class="stat-value" style="font-size:22px;">
+                {{ campaign.name }}
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-label">Target Amount</div>
+            <div class="stat-value" style="font-size:22px;">
+                ₹{{ campaign.target_amount }}
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-label">Raised Amount</div>
+            <div class="stat-value" style="font-size:22px;">
+                ₹{{ campaign.raised_amount }}
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Status
+            </div>
+
+            <div style="margin-top:10px;">
+
+                {% if campaign.status == "active" %}
+
+                    <span class="status active">
+                        Active
+                    </span>
+
+                {% elif campaign.status == "completed" %}
+
+                    <span class="status completed">
+                        Completed
+                    </span>
+
+                {% else %}
+
+                    <span class="status pending">
+                        Upcoming
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Start Date
+            </div>
+
+            <div class="stat-value" style="font-size:20px;">
+                {{ campaign.start_date|date:"d M Y" }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                End Date
+            </div>
+
+            <div class="stat-value" style="font-size:20px;">
+
+                {% if campaign.end_date %}
+                    {{ campaign.end_date|date:"d M Y" }}
+                {% else %}
+                    Not specified
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        style="
+            margin-top:25px;
+            padding:20px;
+            background:var(--background);
+            border:1px solid var(--border);
+            border-radius:12px;
+        "
+    >
+
+        <h4 style="margin-bottom:10px;">
+            Campaign Description
+        </h4>
+
+        <p
+            style="
+                color:var(--muted);
+                font-size:12px;
+                line-height:1.7;
+                margin:0;
+            "
+        >
+            {{ campaign.description }}
+        </p>
+
+    </div>
+
+
+    <div
+        style="
+            margin-top:25px;
+            display:flex;
+            gap:10px;
+        "
+    >
+
+        <a
+            href="{% url 'campaign_edit' campaign.id %}"
+            class="add-btn"
+        >
+            <i class="bi bi-pencil-fill"></i>
+            Edit Campaign
+        </a>
+
+
+        <form
+            method="POST"
+            action="{% url 'campaign_delete' campaign.id %}"
+            onsubmit="return confirm('Are you sure you want to delete this campaign?');"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="add-btn"
+            >
+                <i class="bi bi-trash-fill"></i>
+                Delete Campaign
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

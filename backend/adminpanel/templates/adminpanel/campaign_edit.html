@@ -1,0 +1,192 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}Edit Campaign | HopeRise Foundation{% endblock %}
+
+{% block page_title %}
+Edit Campaign
+{% endblock %}
+
+{% block page_subtitle %}
+Update campaign information.
+{% endblock %}
+
+{% block content %}
+
+<section class="content-card">
+
+    <div class="content-header">
+
+        <div>
+            <h3>Edit Campaign</h3>
+            <p>Update the campaign details below.</p>
+        </div>
+
+        <a
+            href="{% url 'campaigns' %}"
+            class="add-btn"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to Campaigns
+        </a>
+
+    </div>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Campaign Name
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                class="form-control"
+                value="{{ campaign.name }}"
+                required
+            >
+
+        </div>
+
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Description
+            </label>
+
+            <textarea
+                name="description"
+                class="form-control"
+                rows="4"
+                required
+            >{{ campaign.description }}</textarea>
+
+        </div>
+
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Target Amount
+            </label>
+
+            <input
+                type="number"
+                name="target_amount"
+                class="form-control"
+                min="0"
+                step="0.01"
+                value="{{ campaign.target_amount }}"
+                required
+            >
+
+        </div>
+
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Raised Amount
+            </label>
+
+            <input
+                type="number"
+                name="raised_amount"
+                class="form-control"
+                min="0"
+                step="0.01"
+                value="{{ campaign.raised_amount }}"
+            >
+
+        </div>
+
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Start Date
+            </label>
+
+            <input
+                type="date"
+                name="start_date"
+                class="form-control"
+                value="{{ campaign.start_date|date:'Y-m-d' }}"
+                required
+            >
+
+        </div>
+
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                End Date
+            </label>
+
+            <input
+                type="date"
+                name="end_date"
+                class="form-control"
+                value="{% if campaign.end_date %}{{ campaign.end_date|date:'Y-m-d' }}{% endif %}"
+            >
+
+        </div>
+
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Status
+            </label>
+
+            <select
+                name="status"
+                class="form-select"
+                required
+            >
+
+                <option
+                    value="upcoming"
+                    {% if campaign.status == "upcoming" %}selected{% endif %}
+                >
+                    Upcoming
+                </option>
+
+                <option
+                    value="active"
+                    {% if campaign.status == "active" %}selected{% endif %}
+                >
+                    Active
+                </option>
+
+                <option
+                    value="completed"
+                    {% if campaign.status == "completed" %}selected{% endif %}
+                >
+                    Completed
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="add-btn"
+        >
+            <i class="bi bi-check-lg"></i>
+            Save Changes
+        </button>
+
+    </form>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "adminpanel/base.html" %}
+
+{% block title %}
+Edit Volunteer | HopeRise Foundation
+{% endblock %}
+
+{% block page_title %}
+Edit Volunteer
+{% endblock %}
+
+{% block page_subtitle %}
+Update volunteer information.
+{% endblock %}
+
+{% block content %}
+
+<div class="content-card">
+
+<div class="content-header">
+    <div>
+        <h3>Edit Volunteer</h3>
+        <p>Update the volunteer's information below.</p>
+    </div>
+</div>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <div class="row g-3">
+
+        <!-- Full Name -->
+        <div class="col-md-6">
+
+            <label class="form-label fw-semibold">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                class="form-control"
+                value="{{ volunteer.name }}"
+                required
+            >
+
+        </div>
+
+
+        <!-- Email -->
+        <div class="col-md-6">
+
+            <label class="form-label fw-semibold">
+                Email
+            </label>
+
+            <input
+                type="email"
+                name="email"
+                class="form-control"
+                value="{{ volunteer.email }}"
+                required
+            >
+
+        </div>
+
+
+        <!-- Area -->
+        <div class="col-md-6">
+
+            <label class="form-label fw-semibold">
+                Area of Work
+            </label>
+
+            <select
+                name="area"
+                class="form-select"
+                required
+            >
+
+                <option value="Education"
+                    {% if volunteer.area == "Education" %}selected{% endif %}>
+                    Education
+                </option>
+
+                <option value="Healthcare"
+                    {% if volunteer.area == "Healthcare" %}selected{% endif %}>
+                    Healthcare
+                </option>
+
+                <option value="Community"
+                    {% if volunteer.area == "Community" %}selected{% endif %}>
+                    Community
+                </option>
+
+                <option value="Women Support"
+                    {% if volunteer.area == "Women Support" %}selected{% endif %}>
+                    Women Support
+                </option>
+
+                <option value="Child Welfare"
+                    {% if volunteer.area == "Child Welfare" %}selected{% endif %}>
+                    Child Welfare
+                </option>
+
+                <option value="Fundraising"
+                    {% if volunteer.area == "Fundraising" %}selected{% endif %}>
+                    Fundraising
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Status -->
+        <div class="col-md-6">
+
+            <label class="form-label fw-semibold">
+                Status
+            </label>
+
+            <select
+                name="status"
+                class="form-select"
+                required
+            >
+
+                <option value="active"
+                    {% if volunteer.status == "active" %}selected{% endif %}>
+                    Active
+                </option>
+
+                <option value="pending"
+                    {% if volunteer.status == "pending" %}selected{% endif %}>
+                    Pending
+                </option>
+
+                <option value="inactive"
+                    {% if volunteer.status == "inactive" %}selected{% endif %}>
+                    Inactive
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- Buttons -->
+    <div class="mt-4 d-flex gap-2">
+
+        <button
+            type="submit"
+            class="add-btn"
+        >
+            <i class="bi bi-check-lg"></i>
+            Save Changes
+        </button>
+
+        <a
+            href="{% url 'volunteers' %}"
+            class="btn btn-secondary"
+        >
+            Cancel
+        </a>
+
+    </div>
+
+</form>
+
+</div>
+
+{% endblock %}
