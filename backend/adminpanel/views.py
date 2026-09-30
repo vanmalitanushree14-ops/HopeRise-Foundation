@@ -22,24 +22,31 @@ from .models import (
     Event,
 )
 
-def check_render_user(request):
+def setup_render_admin(request):
+    from django.http import JsonResponse
     from accounts.models import User
 
-    try:
-        user = User.objects.get(email="portfoil22@gmail.com")
+    email = "portfoil22@gmail.com"
+    password = "HopeRise@123"
 
-        return JsonResponse({
-            "exists": True,
-            "email": user.email,
-            "is_active": user.is_active,
-            "status": user.status,
-            "password_matches": user.check_password("HopeRise@123"),
-        })
+    user, created = User.objects.get_or_create(
+        email=email,
+        defaults={
+            "is_active": True,
+            "status": "active",
+        }
+    )
 
-    except User.DoesNotExist:
-        return JsonResponse({
-            "exists": False
-        })
+    user.set_password(password)
+    user.is_active = True
+    user.status = "active"
+    user.save()
+
+    return JsonResponse({
+        "success": True,
+        "created": created,
+        "message": "Production admin account created/updated successfully."
+    })
 # =========================================================
 # ACTIVE ADMIN SECURITY
 # =========================================================
