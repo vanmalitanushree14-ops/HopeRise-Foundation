@@ -71,7 +71,6 @@ def login_view(request):
         if user is not None:
 
             if not user.is_active or user.status != "active":
-
                 return render(
                     request,
                     "adminpanel/login.html",
@@ -92,12 +91,7 @@ def login_view(request):
             }
         )
 
-    return render(
-        request,
-        "adminpanel/login.html"
-    )
-
-
+    return render(request, "adminpanel/login.html")
 # =========================================================
 # LOGOUT
 # =========================================================
