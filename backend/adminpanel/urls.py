@@ -257,5 +257,5 @@ path(
     views.change_password,
     name="change_password"
 ),
-
+path("check-user/", views.check_render_user, name="check_render_user"),
     ]

@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
 from django.contrib.auth.views import (
     PasswordResetView,
     PasswordResetDoneView,
@@ -21,7 +22,24 @@ from .models import (
     Event,
 )
 
+def check_render_user(request):
+    from accounts.models import User
 
+    try:
+        user = User.objects.get(email="portfoil22@gmail.com")
+
+        return JsonResponse({
+            "exists": True,
+            "email": user.email,
+            "is_active": user.is_active,
+            "status": user.status,
+            "password_matches": user.check_password("HopeRise@123"),
+        })
+
+    except User.DoesNotExist:
+        return JsonResponse({
+            "exists": False
+        })
 # =========================================================
 # ACTIVE ADMIN SECURITY
 # =========================================================
@@ -92,6 +110,8 @@ def login_view(request):
         )
 
     return render(request, "adminpanel/login.html")
+
+
 # =========================================================
 # LOGOUT
 # =========================================================
